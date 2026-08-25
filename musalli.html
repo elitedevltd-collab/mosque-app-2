@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>بوابة المصلّي الرقمية | Mosque App</title>
+    <meta name="description" content="ترجمة فورية لخطبة الجمعة، وكشف آيات وأحاديث تُذكر خلالها، مع مواقيت الصلاة والقبلة والأذكار.">
+    <meta name="theme-color" content="#1d5240">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./icons/icon-192.png">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Manrope:wght@500;700;800&family=Amiri+Quran&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/tokens.css">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/components.css">
+    <link rel="stylesheet" href="./css/musalli.css">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">تخطَّ إلى المحتوى</a>
+
+    <header class="app-header">
+        <button class="btn-icon" id="settings-btn" style="position:absolute; inset-inline-end: var(--space-sm); top: var(--space-sm); background: rgba(255,255,255,0.16); color:#fff;" onclick="openSettingsSheet()" aria-haspopup="dialog" aria-controls="settings-overlay" aria-label="الإعدادات">⚙️</button>
+        <h1 id="app-main-title">🕌 بوابة المسجد الرقمية</h1>
+        <p id="app-sub-title">مرحباً بك في بيت الله • Welcome to the Mosque</p>
+    </header>
+
+    <main class="container" id="main-content">
+        <div id="tab-home" class="app-page active">
+            <section class="card card-pad sermon-card" aria-labelledby="sermon-title">
+                <div class="card-title" id="sermon-title">🌍 ترجمة الخطبة المباشرة | Live Translation</div>
+
+                <div class="lang-field">
+                    <label class="field-label" for="lang-select">لغة الترجمة</label>
+                    <select id="lang-select" class="select" onchange="changeLanguage()">
+                        <option value="en" data-rtl="false">English (الإنجليزية)</option>
+                        <option value="ur" data-rtl="true">اردو (الأوردو)</option>
+                        <option value="tr" data-rtl="false">Türkçe (التركية)</option>
+                        <option value="bn" data-rtl="false">বাংলা (البنغالية)</option>
+                        <option value="id" data-rtl="false">Bahasa Indonesia (الإندونيسية)</option>
+                    </select>
+                </div>
+
+                <div class="display-controls">
+                    <div class="font-ctrl" role="group" aria-label="حجم خط الترجمة">
+                        <span class="ctrl-label">حجم الخط</span>
+                        <button class="btn-icon" style="width:32px;height:32px;" onclick="changeFontScale(-1)" aria-label="تصغير الخط">A-</button>
+                        <button class="btn-icon" style="width:32px;height:32px;" onclick="changeFontScale(1)" aria-label="تكبير الخط">A+</button>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" id="theme-toggle-btn" data-theme-label onclick="toggleTheme()">🌙 وضع ليلي</button>
+                </div>
+
+                <div id="translation-output" class="translation-display ltr" role="status" aria-live="polite">Waiting for the speech to begin...</div>
+
+                <div class="action-bar">
+                    <div class="live-status-row">
+                        <span class="status-dot" style="display:flex;align-items:center;gap:8px;"><span class="pulsing" id="live-pulse" style="width:8px;height:8px;border-radius:50%;background:var(--color-live);display:inline-block;"></span><span id="live-status-text">البث المباشر متصل فوريًا</span></span>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="speak()">🔊 استمع / Listen</button>
+                </div>
+                <div id="fb-status">جارٍ التحقق من الاتصال...</div>
+            </section>
+
+            <section class="card card-pad qh-card" id="qh-card" aria-labelledby="qh-title">
+                <div class="card-title" id="qh-title">📖 آيات وأحاديث ذُكرت في الخطبة</div>
+                <div id="db-status"></div>
+                <div id="quran-hadith-log" aria-live="polite">
+                    <div class="qh-empty" id="qh-empty">لم تُذكر آية قرآنية أو حديث نبوي حتى الآن...</div>
+                </div>
+            </section>
+        </div>
+
+        <div id="tab-knowledge" class="app-page">
+            <section class="card card-pad knowledge-card quran" aria-labelledby="quran-of-day-title">
+                <h3 id="quran-of-day-title">📖 آية وتدبّر اليوم (أونلاين)</h3>
+                <div class="content" id="quran-text">«إِنَّ مَعَ الْعُسْرِ يُسْرًا»</div>
+                <span class="source-tag" id="quran-source">سورة الشرح - الآية 6</span>
+            </section>
+
+            <section class="card card-pad knowledge-card hadith" aria-labelledby="hadith-of-day-title" style="margin-top: var(--space-md);">
+                <h3 id="hadith-of-day-title">✨ من السُنّة المطهرة (أونلاين)</h3>
+                <div class="content" id="hadith-text">قال ﷺ: «مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ»</div>
+                <span class="source-tag" id="hadith-source">رواه مسلم</span>
+            </section>
+
+            <section class="card card-pad search-card" aria-labelledby="quran-search-title">
+                <h3 id="quran-search-title">🔍 المكتبة القرآنية الشاملة (بحث دقيق بالآيات والكلمات)</h3>
+                <div class="search-row">
+                    <label class="visually-hidden" for="quran-search-input">ابحث في القرآن</label>
+                    <input type="text" id="quran-search-input" class="input" placeholder="اكتب كلمة أو آية (مثال: أزواجكم، العسر، الصلاة)...">
+                    <button onclick="searchQuranLibrary()" class="btn btn-primary">بحث</button>
+                </div>
+                <div id="quran-loading" class="loading-row" style="display:none;"><span class="spinner"></span></div>
+                <div id="quran-search-result" class="search-result-box"></div>
+            </section>
+
+            <section class="card card-pad search-card" aria-labelledby="hadith-search-title">
+                <h3 id="hadith-search-title">🔍 موسوعة الحديث النبوي الشريف (البحث في كتب السنة)</h3>
+                <div class="search-row">
+                    <label class="visually-hidden" for="hadith-search-input">ابحث في الحديث</label>
+                    <input type="text" id="hadith-search-input" class="input" placeholder="اكتب جملة من الحديث (مثال: النيات، طهور، صيام)...">
+                    <button onclick="searchHadithLibrary()" class="btn btn-primary">بحث</button>
+                </div>
+                <div id="hadith-loading" class="loading-row" style="display:none;"><span class="spinner"></span></div>
+                <div id="hadith-search-result" class="search-result-box"></div>
+            </section>
+        </div>
+
+        <div id="tab-tools" class="app-page">
+            <section class="card card-pad" aria-labelledby="tools-title">
+                <div class="card-title" id="tools-title">🧭 أدوات</div>
+                <div class="tools-grid">
+                    <button class="tool-btn tappable" onclick="toggleTool('qibla')">
+                        <span class="tool-icon">🧭</span><span class="tool-name">القبلة</span><span class="tool-desc">الاتجاه إلى الكعبة</span>
+                    </button>
+                    <button class="tool-btn tappable" onclick="toggleTool('adhkar')">
+                        <span class="tool-icon">📿</span><span class="tool-name">الأذكار</span><span class="tool-desc">أذكار وأدعية يومية</span>
+                    </button>
+                    <button class="tool-btn tappable" onclick="toggleTool('umrah')">
+                        <span class="tool-icon">🕋</span><span class="tool-name">العمرة</span><span class="tool-desc">قائمة أعمال النسك</span>
+                    </button>
+                    <button class="tool-btn tappable" onclick="toggleTool('fasting')">
+                        <span class="tool-icon">🌙</span><span class="tool-name">الصيام</span><span class="tool-desc">أيام الصيام القادمة</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="card card-pad tool-panel" id="tool-qibla" style="display:none;">
+                <div class="card-title">🧭 اتجاه القبلة</div>
+                <div id="qibla-content" style="text-align:center;">
+                    <button class="btn btn-primary btn-block" onclick="computeQibla()">📍 احسب اتجاه القبلة من موقعي</button>
+                </div>
+            </section>
+
+            <section class="card card-pad tool-panel" id="tool-adhkar" style="display:none;">
+                <div class="card-title">📿 الأذكار</div>
+                <div class="adhkar-sub-title">أذكار الصباح</div>
+                <div class="adhkar-item">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ (×3)</div>
+                <div class="adhkar-item">اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ</div>
+                <div class="adhkar-item">أَصْبَحْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ</div>
+                <div class="adhkar-sub-title">أذكار المساء</div>
+                <div class="adhkar-item">اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ</div>
+                <div class="adhkar-item">أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ</div>
+                <div class="adhkar-item">أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ (×3)</div>
+            </section>
+
+            <section class="card card-pad tool-panel" id="tool-umrah" style="display:none;">
+                <div class="card-title">🕋 قائمة أعمال العمرة</div>
+                <div class="umrah-step"><span class="umrah-num">1</span><div><b>الإحرام</b><br>الاغتسال، ولبس ملابس الإحرام، والنية، والتلبية من الميقات</div></div>
+                <div class="umrah-step"><span class="umrah-num">2</span><div><b>الطواف</b><br>سبعة أشواط حول الكعبة المشرفة، تبدأ وتنتهي عند الحجر الأسود</div></div>
+                <div class="umrah-step"><span class="umrah-num">3</span><div><b>الصلاة خلف مقام إبراهيم</b><br>ركعتان بعد الطواف إن أمكن، وإلا في أي مكان بالمسجد</div></div>
+                <div class="umrah-step"><span class="umrah-num">4</span><div><b>السعي</b><br>سبعة أشواط بين الصفا والمروة</div></div>
+                <div class="umrah-step"><span class="umrah-num">5</span><div><b>الحلق أو التقصير</b><br>حلق الرأس كاملاً أو تقصير الشعر — وبه تتم العمرة</div></div>
+
+                <div class="adhkar-sub-title">🤲 أذكار وأدعية العمرة المستجابة</div>
+                <div class="adhkar-item"><b>دعاء التلبية:</b><br>لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيكَ لَكَ لَبَّيْكَ، إِنَّ الْحَمْدَ وَالنِّعْمَةَ لَكَ وَالْمُلْكَ، لَا شَرِيكَ لَكَ</div>
+                <div class="adhkar-item"><b>عند رؤية الكعبة:</b><br>اللَّهُمَّ زِدْ هَذَا الْبَيْتَ تَشْرِيفًا وَتَعْظِيمًا وَتَكْرِيمًا وَمَهَابَةً، وَزِدْ مَنْ شَرَّفَهُ وَكَرَّمَهُ مِمَّنْ حَجَّهُ أَوِ اعْتَمَرَهُ تَشْرِيفًا وَتَكْرِيمًا وَتَعْظِيمًا وَبِرًّا</div>
+                <div class="adhkar-item"><b>عند استلام الحجر الأسود:</b><br>بِسْمِ اللَّهِ، وَاللَّهُ أَكْبَرُ</div>
+                <div class="adhkar-item"><b>بين الركن اليماني والحجر الأسود (يُكرَّر كل شوط):</b><br>رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</div>
+                <div class="adhkar-item"><b>عند بدء السعي (يُقال عند الاقتراب من الصفا):</b><br>إِنَّ الصَّفَا وَالْمَرْوَةَ مِنْ شَعَائِرِ اللَّهِ، أَبْدَأُ بِمَا بَدَأَ اللَّهُ بِهِ</div>
+                <div class="adhkar-item"><b>فوق الصفا والمروة (يُقال ثلاث مرات، وبينها الدعاء):</b><br>اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ، أَنْجَزَ وَعْدَهُ، وَنَصَرَ عَبْدَهُ، وَهَزَمَ الْأَحْزَابَ وَحْدَهُ</div>
+                <div class="adhkar-item"><b>عند شرب ماء زمزم:</b><br>اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا وَاسِعًا، وَشِفَاءً مِنْ كُلِّ دَاءٍ</div>
+            </section>
+
+            <section class="card card-pad tool-panel" id="tool-fasting" style="display:none;">
+                <div class="card-title">🌙 أيام الصيام القادمة</div>
+                <div id="fasting-content">جارٍ الحساب...</div>
+            </section>
+        </div>
+
+        <div id="tab-calendar" class="app-page">
+            <section class="card card-pad" style="margin-top: var(--space-md);" aria-labelledby="prayer-title">
+                <div class="card-title" id="prayer-title">مواقيت الصلاة</div>
+                <div class="city-field">
+                    <label class="field-label" for="city-select">المدينة</label>
+                    <select id="city-select" class="select city-select" onchange="onCityChange()"></select>
+                </div>
+                <div class="prayer-list" id="prayer-list">
+                    <div class="prayer-row" data-prayer="Fajr"><span class="p-icon">☾</span><span class="p-name">الفجر</span><span class="p-time num">--:--</span></div>
+                    <div class="prayer-row" data-prayer="Sunrise"><span class="p-icon">◒</span><span class="p-name">الشروق</span><span class="p-time num">--:--</span></div>
+                    <div class="prayer-row" data-prayer="Dhuhr"><span class="p-icon">☀</span><span class="p-name">الظهر</span><span class="p-time num">--:--</span></div>
+                    <div class="prayer-row" data-prayer="Asr"><span class="p-icon">☀</span><span class="p-name">العصر</span><span class="p-time num">--:--</span></div>
+                    <div class="prayer-row" data-prayer="Maghrib"><span class="p-icon">◑</span><span class="p-name">المغرب</span><span class="p-time num">--:--</span></div>
+                    <div class="prayer-row" data-prayer="Isha"><span class="p-icon">☾</span><span class="p-name">العشاء</span><span class="p-time num">--:--</span></div>
+                </div>
+
+                <div class="next-prayer-ribbon" id="next-prayer-ribbon">
+                    <span id="next-prayer-name">—</span>
+                    <span id="next-prayer-countdown" class="num">--:--</span>
+                </div>
+
+                <div class="hadith-of-day" id="hadith-of-day" style="display:none;">
+                    <div class="hod-label">قال النبي ﷺ:</div>
+                    <div class="hod-text" id="hod-text"></div>
+                    <div class="hod-source" id="hod-source"></div>
+                </div>
+
+                <div class="masjidi-footer">
+                    <span class="mf-time num" id="mf-clock">--:--</span>
+                    <span class="mf-date" id="mf-date">—</span>
+                </div>
+
+                <div id="prayer-status" style="text-align:center; font-size:var(--text-xs); color:var(--color-text-faint); margin-top:var(--space-2xs);"></div>
+            </section>
+
+            <section class="card card-pad" aria-labelledby="events-title">
+                <div class="card-title" id="events-title">📅 الأحداث الإسلامية القادمة</div>
+                <div id="events-content">جارٍ التحميل...</div>
+            </section>
+        </div>
+    </main>
+
+    <nav class="bottom-nav" aria-label="التنقّل الرئيسي">
+        <button class="nav-item active" id="nav-home" aria-current="page" onclick="navigateTo('home')">
+            <span class="nav-icon">🕌</span>
+            <span>الرئيسية</span>
+        </button>
+        <button class="nav-item" id="nav-knowledge" onclick="navigateTo('knowledge')">
+            <span class="nav-icon">📖</span>
+            <span>القرآن والسنة</span>
+        </button>
+        <button class="nav-item" id="nav-tools" onclick="navigateTo('tools')">
+            <span class="nav-icon">🧭</span>
+            <span>أدوات</span>
+        </button>
+        <button class="nav-item" id="nav-calendar" onclick="navigateTo('calendar')">
+            <span class="nav-icon">📅</span>
+            <span>التقويم</span>
+        </button>
+    </nav>
+
+    <!-- ===== ورقة الإعدادات ===== -->
+    <div class="modal-overlay" id="settings-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="settings-heading">
+        <div class="modal-sheet">
+            <div class="card-title" id="settings-heading">⚙️ الإعدادات</div>
+
+            <div class="settings-row">
+                <div>
+                    <div class="settings-label">مظهر التطبيق</div>
+                    <div class="settings-hint">تلقائي يتبع إعداد جهازك</div>
+                </div>
+                <select class="select" style="width:auto;" data-theme-select onchange="setTheme(this.value)">
+                    <option value="auto">تلقائي</option>
+                    <option value="light">فاتح</option>
+                    <option value="dark">داكن</option>
+                </select>
+            </div>
+
+            <div class="settings-row">
+                <div>
+                    <div class="settings-label">تقليل الحركة والانتقالات</div>
+                    <div class="settings-hint">لتفضيل تجربة أهدأ بصريًا</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" data-reduce-motion-toggle onchange="setReduceMotion(this.checked)">
+                    <span class="track"></span><span class="thumb"></span>
+                </label>
+            </div>
+
+            <button class="btn btn-secondary btn-block" style="margin-top: var(--space-md);" onclick="closeSettingsSheet()">إغلاق</button>
+        </div>
+    </div>
+
+    <script src="./js/musalli-settings.js"></script>
+    <script src="./js/musalli-prayer.js"></script>
+    <script src="./js/musalli-qibla.js"></script>
+    <script src="./js/musalli-quran-hadith.js"></script>
+    <script src="./js/musalli-translation.js"></script>
+    <script src="./js/musalli-app.js"></script>
+</body>
+</html>

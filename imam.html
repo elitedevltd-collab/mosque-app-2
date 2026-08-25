@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>لوحة تحكم الإمام</title>
+    <meta name="theme-color" content="#1d5240">
+    <link rel="icon" href="./icons/icon-192.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./css/tokens.css">
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/components.css">
+    <link rel="stylesheet" href="./css/imam.css">
+</head>
+<body>
+    <div class="imam-shell">
+        <div class="imam-header">
+            <h1>🎙️ لوحة تحكم الإمام (المنبر)</h1>
+            <p>بث نص الخطبة مباشرة للمصلّين</p>
+        </div>
+
+        <div id="fb-status">جارٍ التحقق من الاتصال...</div>
+        <div id="session-banner" role="alert"></div>
+
+        <!-- ===== شاشة الدخول — لا يظهر أي عنصر تحكم في البث قبل تسجيل الدخول ===== -->
+        <section class="card card-pad" id="login-gate">
+            <p><strong>🔒 سجّل دخولك كإمام لبدء البث</strong></p>
+            <label class="field-label" for="login-email">البريد الإلكتروني</label>
+            <input type="email" id="login-email" class="input" placeholder="البريد الإلكتروني" autocomplete="username">
+            <label class="field-label" for="login-password">كلمة المرور</label>
+            <input type="password" id="login-password" class="input" placeholder="كلمة المرور" autocomplete="current-password">
+            <button class="btn btn-primary btn-block" style="margin-top: var(--space-sm);" onclick="signIn()" id="login-btn">دخول</button>
+            <div id="login-status"></div>
+        </section>
+
+        <!-- ===== عناصر التحكم — تظهر فقط بعد نجاح تسجيل الدخول ===== -->
+        <section class="card card-pad" id="app-controls" style="display:none;">
+            <p class="publish-hint">الخيار 1: اكتب النص العربي واضغط نشر</p>
+            <label class="visually-hidden" for="admin-input">نص الخطبة</label>
+            <textarea id="admin-input" class="textarea" placeholder="اكتب نص الخطبة هنا... مثلاً: اتقوا الله عباد الله"></textarea>
+            <button class="btn btn-primary btn-block" onclick="publishText()">📢 نشر وتحديث النص عند المصلين</button>
+
+            <hr class="imam-divider">
+
+            <p class="publish-hint">الخيار 2: التحدث المباشر الفوري (الذكاء الاصطناعي)</p>
+            <button id="voice-btn" class="btn btn-voice btn-block" onclick="toggleVoice()">🎙️ تشغيل الميكروفون والبث الفوري</button>
+            <div id="live-arabic" class="live-box">الميكروفون مغلق حالياً...</div>
+
+            <button class="btn btn-secondary btn-block" onclick="signOutImam()" style="margin-top:var(--space-md);">🚪 تسجيل الخروج</button>
+        </section>
+    </div>
+
+    <script src="./js/imam-auth.js"></script>
+    <script src="./js/imam-app.js"></script>
+</body>
+</html>
