@@ -1,0 +1,166 @@
+/* ============================================================================
+   بوابة المسجد — نمط صفحة المصلّي (فوق tokens.css + base.css + components.css)
+   ============================================================================ */
+
+body { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+
+/* ---------- الترويسة ---------- */
+.app-header {
+  background: var(--color-primary);
+  color: var(--color-primary-on);
+  padding: var(--space-lg) var(--space-md) var(--space-xl);
+  text-align: center;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+.app-header h1 { font-size: var(--text-lg); margin-bottom: 4px; }
+.app-header p { font-size: var(--text-sm); opacity: 0.82; font-weight: 600; }
+
+.container {
+  max-width: 620px;
+  margin: calc(-1 * var(--space-lg)) auto 0;
+  padding: 0 var(--space-sm) var(--space-lg);
+}
+
+/* ---------- التحكم في الصفحات ---------- */
+.app-page { display: none; }
+.app-page.active { display: block; animation: pageIn var(--duration-base) var(--ease-standard); }
+@keyframes pageIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ---------- بطاقة الترجمة الحية ---------- */
+.sermon-card { margin-top: var(--space-md); }
+.sermon-toolbar { display: flex; flex-wrap: wrap; gap: var(--space-xs); align-items: center; justify-content: space-between; margin-bottom: var(--space-sm); }
+.lang-field { flex: 1; min-width: 160px; }
+.display-controls { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-2xs); margin-bottom: var(--space-sm); }
+.font-ctrl { display: flex; align-items: center; gap: var(--space-3xs); }
+.ctrl-label { font-size: var(--text-xs); color: var(--color-text-faint); }
+
+.translation-display {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  min-height: 130px;
+  font-size: var(--translation-text-size);
+  line-height: 1.85;
+  color: var(--color-text);
+  font-weight: 500;
+  margin-bottom: var(--space-sm);
+  transition: background-color var(--duration-base) var(--ease-standard);
+}
+.translation-display.ltr { direction: ltr; text-align: left; }
+.translation-display.rtl { direction: rtl; text-align: right; }
+@keyframes flashUpdate { 0% { background-color: var(--color-primary-soft); } 100% { background-color: var(--color-surface-2); } }
+.translation-display.flash { animation: flashUpdate 0.8s ease-out; }
+
+.action-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); flex-wrap: wrap; }
+.live-status-row { display: flex; align-items: center; gap: var(--space-2xs); font-size: var(--text-sm); font-weight: 700; color: var(--color-success); }
+.live-status-row .status-dot { display: contents; }
+#fb-status { text-align: center; font-size: var(--text-xs); color: var(--color-text-faint); margin-top: var(--space-2xs); }
+
+/* ---------- سجل الآيات والأحاديث ---------- */
+.qh-card { margin-top: var(--space-md); }
+#db-status { text-align: center; font-size: var(--text-xs); margin-bottom: var(--space-2xs); }
+#quran-hadith-log { display: flex; flex-direction: column; gap: var(--space-xs); max-height: 440px; overflow-y: auto; }
+.qh-empty { text-align: center; color: var(--color-text-faint); font-size: var(--text-sm); padding: var(--space-md) 0; }
+.qh-item {
+  background: var(--color-surface-2);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  border-inline-start: 4px solid var(--color-gold);
+  animation: pageIn var(--duration-base) var(--ease-standard);
+}
+.qh-item.hadith { border-inline-start-color: var(--color-hadith); }
+.qh-badge { font-size: var(--text-xs); font-weight: 800; margin-bottom: var(--space-2xs); color: var(--color-gold); }
+.qh-item.hadith .qh-badge { color: var(--color-hadith); }
+.qh-arabic { font-family: var(--font-quran); font-size: calc(1.05rem * var(--sermon-scale)); line-height: 2; text-align: center; color: var(--color-text); margin-bottom: var(--space-2xs); }
+.qh-item.hadith .qh-arabic { font-family: var(--font-hadith); }
+.qh-translation { font-size: calc(0.9rem * var(--sermon-scale)); line-height: 1.7; color: var(--color-text-muted); text-align: center; background: var(--color-surface); border-radius: var(--radius-sm); padding: var(--space-2xs); }
+.qh-note { font-size: var(--text-xs); color: var(--color-text-faint); text-align: center; margin-top: var(--space-3xs); }
+
+/* ---------- المعرفة: آية/حديث اليوم + البحث ---------- */
+.knowledge-card .content,
+#quran-text, #hadith-text { font-size: var(--text-md); line-height: 1.9; text-align: center; font-weight: 600; padding: var(--space-2xs) 0; color: var(--color-text); }
+#quran-text { font-family: var(--font-quran); font-size: 1.25rem; }
+#hadith-text { font-family: var(--font-hadith); }
+.knowledge-card .source-tag { display: block; font-size: var(--text-xs); color: var(--color-text-faint); text-align: end; margin-top: var(--space-2xs); font-weight: 700; }
+.knowledge-card.quran { border-inline-start: 4px solid var(--color-gold); }
+.knowledge-card.hadith { border-inline-start: 4px solid var(--color-hadith); }
+.knowledge-card h3 { font-size: var(--text-sm); margin-bottom: var(--space-2xs); color: var(--color-text-muted); }
+
+.search-card { margin-top: var(--space-md); }
+.search-card h3 { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-xs); }
+.search-row { display: flex; gap: var(--space-2xs); margin-bottom: var(--space-2xs); }
+.search-row .input { flex: 1; }
+.search-row button { flex-shrink: 0; }
+.search-result-box { display: none; margin-top: var(--space-xs); max-height: 480px; overflow-y: auto; }
+.search-result-box.active { display: block; }
+.result-count { font-size: var(--text-xs); font-weight: 700; color: var(--color-success); background: var(--color-success-soft); padding: var(--space-2xs); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-xs); }
+.result-item { background: var(--color-surface-2); border-radius: var(--radius-sm); padding: var(--space-xs); margin-bottom: var(--space-2xs); border-inline-start: 3px solid var(--color-gold); }
+.result-item .result-text { font-size: var(--text-base); line-height: 1.8; color: var(--color-text); margin-bottom: var(--space-3xs); text-align: center; }
+.result-item .result-source { font-size: var(--text-xs); color: var(--color-text-faint); font-weight: 700; text-align: end; }
+
+/* ---------- الأدوات ---------- */
+.tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xs); }
+.tool-btn { background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--space-md) var(--space-xs); text-align: center; }
+.tool-btn:active { transform: scale(0.97); }
+.tool-icon { display: block; font-size: 24px; margin-bottom: var(--space-2xs); }
+.tool-name { display: block; font-size: var(--text-base); font-weight: 800; color: var(--color-text); margin-bottom: 2px; }
+.tool-desc { display: block; font-size: var(--text-xs); color: var(--color-text-faint); }
+
+.tool-panel { margin-top: var(--space-md); }
+.qibla-degree { font-size: 2.4rem; font-weight: 800; color: var(--color-primary); }
+.qibla-compass { width: 140px; height: 140px; margin: var(--space-sm) auto; }
+.qibla-note { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.8; margin-top: var(--space-xs); }
+
+.adhkar-sub-title { font-size: var(--text-sm); font-weight: 800; color: var(--color-primary); margin: var(--space-sm) 0 var(--space-2xs); }
+.adhkar-sub-title:first-of-type { margin-top: 0; }
+.adhkar-item { background: var(--color-surface-2); border-radius: var(--radius-sm); padding: var(--space-xs); margin-bottom: var(--space-2xs); font-size: var(--text-base); line-height: 2; text-align: center; }
+
+.umrah-step { display: flex; gap: var(--space-xs); align-items: flex-start; padding: var(--space-2xs) 0; border-bottom: 1px dashed var(--color-border); font-size: var(--text-sm); line-height: 1.8; }
+.umrah-step:last-child { border-bottom: none; }
+.umrah-num { flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; background: var(--color-primary); color: var(--color-primary-on); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: var(--text-xs); }
+
+.fasting-row { display: flex; align-items: center; justify-content: space-between; background: var(--color-surface-2); border-radius: var(--radius-sm); padding: var(--space-xs); margin-bottom: var(--space-2xs); }
+.fasting-row .fname { font-weight: 700; font-size: var(--text-sm); }
+.fasting-row .fdate { font-size: var(--text-xs); color: var(--color-text-faint); direction: ltr; }
+
+/* ---------- التقويم / المواقيت ---------- */
+.city-field { margin-bottom: var(--space-sm); }
+.prayer-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: var(--space-md); }
+.prayer-row { display: flex; align-items: center; justify-content: space-between; padding: var(--space-2xs) var(--space-3xs); border-radius: var(--radius-sm); }
+.prayer-row.is-next { background: var(--color-primary-soft); padding-inline: var(--space-xs); }
+.p-icon { color: var(--color-primary); font-size: var(--text-base); width: 24px; text-align: center; }
+.p-name { flex: 1; font-size: var(--text-base); font-weight: 700; margin-inline-start: var(--space-2xs); }
+.p-time { font-size: var(--text-lg); font-weight: 800; direction: ltr; }
+
+.next-prayer-ribbon {
+  background: var(--color-primary);
+  color: var(--color-primary-on);
+  border-radius: var(--radius-full);
+  padding: var(--space-xs) var(--space-md);
+  display: flex; align-items: center; justify-content: space-between;
+  font-weight: 800; font-size: var(--text-md); margin: 4px 0 var(--space-sm);
+}
+#next-prayer-countdown { direction: ltr; font-variant-numeric: tabular-nums; }
+
+.hadith-of-day { text-align: center; padding: var(--space-2xs) 0 var(--space-sm); border-bottom: 1px dashed var(--color-border); margin-bottom: var(--space-sm); }
+.hod-label { font-size: var(--text-sm); color: var(--color-text-faint); margin-bottom: var(--space-3xs); font-weight: 700; }
+.hod-text { font-family: var(--font-hadith); font-size: var(--text-base); line-height: 1.9; margin-bottom: var(--space-3xs); }
+.hod-source { font-size: var(--text-xs); color: var(--color-text-faint); }
+
+.masjidi-footer { display: flex; align-items: center; justify-content: center; gap: var(--space-2xs); }
+.mf-time { font-size: var(--text-lg); font-weight: 800; color: var(--color-primary); direction: ltr; }
+.mf-date { font-size: var(--text-xs); color: var(--color-text-faint); font-weight: 600; }
+
+.event-card { display: flex; align-items: center; gap: var(--space-xs); background: var(--color-surface-2); border-radius: var(--radius-md); padding: var(--space-xs); margin-bottom: var(--space-2xs); }
+.event-badge { flex-shrink: 0; width: 50px; height: 50px; border-radius: var(--radius-sm); background: var(--color-primary-soft); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.event-badge .num { font-size: var(--text-md); font-weight: 800; color: var(--color-primary); line-height: 1; }
+.event-badge .lbl { font-size: 9px; color: var(--color-text-faint); }
+.event-info .ename { font-weight: 800; font-size: var(--text-sm); }
+.event-info .edate { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: 2px; }
+
+/* ---------- إعدادات (ورقة سفلية) ---------- */
+.settings-row { display: flex; align-items: center; justify-content: space-between; padding: var(--space-xs) 0; border-bottom: 1px solid var(--color-border-soft); }
+.settings-row:last-child { border-bottom: none; }
+.settings-label { font-size: var(--text-base); font-weight: 700; }
+.settings-hint { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: 2px; }

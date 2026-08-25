@@ -1,0 +1,122 @@
+/* ============================================================================
+   بوابة المسجد — الأساسيات (Reset + Typography + RTL + Accessibility)
+   ============================================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color var(--duration-base) var(--ease-standard), color var(--duration-base) var(--ease-standard);
+}
+
+/* الأرقام اللاتينية (المواقيت، العدّاد، الدرجات) بخط لاتيني مخصص وبعرض ثابت لتفادي "قفز" الأرقام */
+.num, .tabular, [dir="ltr"] {
+  font-variant-numeric: tabular-nums;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-ui);
+  font-weight: 800;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+button:disabled { cursor: not-allowed; opacity: 0.6; }
+
+a { color: inherit; }
+
+img, svg { display: block; max-width: 100%; }
+
+ul, ol { list-style: none; }
+
+/* ---------- RTL كخاصية أولى — خصائص منطقية بدل left/right المُقفَلة ---------- */
+[dir="rtl"], [dir="ltr"] { unicode-bidi: isolate; }
+
+/* عناصر تُعرَض دائمًا LTR بصريًا (أرقام الساعة، درجة القبلة) حتى داخل صفحة RTL */
+.force-ltr { direction: ltr; unicode-bidi: isolate; }
+
+/* ---------- حالة التركيز — مرئية دائمًا لدعم لوحة المفاتيح، بدون كسر التصميم ---------- */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2.5px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+/* على الأزرار الدائرية بالكامل يحتاج الـ outline نصف قطر أكبر ليطابق الشكل */
+.btn-icon:focus-visible, .nav-item:focus-visible, .fab:focus-visible {
+  outline-offset: 3px;
+}
+
+/* ---------- حركة مخفَّضة — نحترم تفضيل النظام دائمًا ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* تفضيل صريح من إعدادات التطبيق نفسه (مستقل عن تفضيل نظام التشغيل) */
+[data-reduce-motion="true"] *, [data-reduce-motion="true"] *::before, [data-reduce-motion="true"] *::after {
+  animation-duration: 0.001ms !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* ---------- أهداف لمس كافية — 44px على الأقل لأي عنصر تفاعلي ---------- */
+button, .tappable, .nav-item, .tool-btn, a.tappable {
+  min-height: 44px;
+}
+
+/* ---------- شريط تمرير هادئ (يبقى نافعًا على سطح المكتب، محايد على الجوال) ---------- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-faint); }
+
+/* ---------- فئة "مخفي بصريًا لكن متاح لقارئ الشاشة" ---------- */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- تخطي إلى المحتوى — أول عنصر قابل للتركيز في الصفحة ---------- */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  inset-inline-start: var(--space-sm);
+  z-index: var(--z-toast);
+  background: var(--color-primary);
+  color: var(--color-primary-on);
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  transition: top var(--duration-fast) var(--ease-standard);
+}
+.skip-link:focus { top: var(--space-sm); }

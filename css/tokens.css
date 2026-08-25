@@ -1,0 +1,190 @@
+/* ============================================================================
+   بوابة المسجد — نظام التصميم (Design Tokens)
+   ============================================================================
+   كل قيمة لونية أو مسافة أو نصف قطر في التطبيق تُشتق من هنا. لا تكتب ألوانًا
+   أو مسافات مباشرة في أي ملف CSS آخر — أضف رمزًا (token) جديدًا هنا لو احتجت.
+
+   الثيمات الثلاثة:
+   - :root                              → الفاتح (الافتراضي، وأيضًا ما يُعرض حين
+                                            يختار المستخدم "تلقائي" ويكون نظامه فاتحًا)
+   - @media (prefers-color-scheme:dark) → يطبَّق تلقائيًا حين يكون نظام الجهاز
+                                            داكنًا و لم يفرض المستخدم اختيارًا صريحًا
+   - [data-theme="dark"] / [data-theme="light"] → اختيار المستخدم الصريح من
+                                            الإعدادات، يتغلّب دائمًا على نظام الجهاز
+   ============================================================================ */
+
+:root {
+  /* ---------- اللون: الهوية (أخضر زمردي هادئ — عمارة إسلامية، لا أزرق SaaS عام) ---------- */
+  --color-primary-h: 162;
+  --color-primary: hsl(var(--color-primary-h) 58% 26%);
+  --color-primary-strong: hsl(var(--color-primary-h) 62% 20%);
+  --color-primary-soft: hsl(var(--color-primary-h) 46% 94%);
+  --color-primary-on: #ffffff;
+
+  /* لمسة ذهبية/نحاسية هادئة — لعناصر القرآن فقط، ليست لونًا عامًا للواجهة */
+  --color-gold: hsl(38 46% 42%);
+  --color-gold-soft: hsl(38 55% 95%);
+
+  /* لون الحديث — أخضر مموّه من نفس عائلة الهوية، لا أزرق منفصل تعسفي */
+  --color-hadith: hsl(174 24% 38%);
+  --color-hadith-soft: hsl(174 24% 94%);
+
+  /* ---------- المحايدات: رمادي بميل طفيف نحو الأخضر (مُختار، لا افتراضي) ---------- */
+  --color-bg: hsl(140 8% 97%);
+  --color-surface: #ffffff;
+  --color-surface-2: hsl(140 10% 95%);
+  --color-surface-raised: #ffffff;
+  --color-border: hsl(140 10% 88%);
+  --color-border-soft: hsl(140 10% 92%);
+  --color-text: hsl(160 14% 11%);
+  --color-text-muted: hsl(150 8% 40%);
+  --color-text-faint: hsl(150 6% 58%);
+
+  /* ---------- ألوان الحالة (دلالية — منفصلة عن لون الهوية) ---------- */
+  --color-success: hsl(150 45% 32%);
+  --color-success-soft: hsl(150 45% 94%);
+  --color-warning: hsl(38 68% 40%);
+  --color-warning-soft: hsl(38 70% 94%);
+  --color-danger: hsl(4 55% 48%);
+  --color-danger-soft: hsl(4 60% 95%);
+  --color-live: hsl(150 55% 34%);
+
+  /* ---------- الظل: بميل لوني خفيف نحو الهوية، لا أسود خالص ---------- */
+  --shadow-color: 160 30% 20%;
+  --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.06), 0 1px 1px hsl(var(--shadow-color) / 0.04);
+  --shadow-md: 0 6px 20px hsl(var(--shadow-color) / 0.08), 0 2px 6px hsl(var(--shadow-color) / 0.05);
+  --shadow-lg: 0 16px 40px hsl(var(--shadow-color) / 0.14), 0 4px 12px hsl(var(--shadow-color) / 0.06);
+
+  /* ---------- الخطوط ---------- */
+  --font-ui: 'Cairo', 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-latin: 'Manrope', 'Cairo', system-ui, sans-serif;
+  --font-quran: 'Amiri Quran', 'Amiri', 'Traditional Arabic', serif;
+  --font-hadith: 'Amiri', 'Traditional Arabic', serif;
+
+  /* سلّم الحجم — mobile-first، القاعدة 16px */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.8125rem;  /* 13px */
+  --text-base: 0.9375rem;/* 15px */
+  --text-md: 1.0625rem;  /* 17px */
+  --text-lg: 1.25rem;    /* 20px */
+  --text-xl: 1.5rem;     /* 24px */
+  --text-2xl: 1.875rem;  /* 30px */
+  --text-3xl: 2.25rem;   /* 36px */
+
+  /* حجم نص الخطبة والترجمة — يتحكم فيه المستخدم من الإعدادات (مضاعِف) */
+  --sermon-scale: 1;
+  --sermon-text-size: calc(1.375rem * var(--sermon-scale));
+  --translation-text-size: calc(1.0625rem * var(--sermon-scale));
+
+  /* ---------- المسافات ---------- */
+  --space-3xs: 0.25rem;  /* 4px */
+  --space-2xs: 0.5rem;   /* 8px */
+  --space-xs: 0.75rem;   /* 12px */
+  --space-sm: 1rem;      /* 16px */
+  --space-md: 1.5rem;    /* 24px */
+  --space-lg: 2rem;      /* 32px */
+  --space-xl: 3rem;      /* 48px */
+  --space-2xl: 4rem;     /* 64px */
+
+  /* ---------- نصف القطر ---------- */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-full: 999px;
+
+  /* ---------- الحركة ---------- */
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-base: 220ms;
+  --duration-slow: 400ms;
+
+  /* ---------- طبقات z-index موحّدة ---------- */
+  --z-nav: 500;
+  --z-overlay: 800;
+  --z-toast: 900;
+
+  color-scheme: light;
+}
+
+/* ============================================================================
+   الوضع الداكن — يتبع نظام الجهاز تلقائيًا ما لم يفرض المستخدم اختيارًا صريحًا
+   ============================================================================ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-primary: hsl(var(--color-primary-h) 42% 52%);
+    --color-primary-strong: hsl(var(--color-primary-h) 48% 62%);
+    --color-primary-soft: hsl(var(--color-primary-h) 30% 18%);
+    --color-primary-on: #06120e;
+
+    --color-gold: hsl(38 55% 62%);
+    --color-gold-soft: hsl(38 35% 16%);
+
+    --color-hadith: hsl(174 30% 62%);
+    --color-hadith-soft: hsl(174 22% 16%);
+
+    /* ليس أسود خالصًا — يبقى النص العربي وعلامات التشكيل مقروءة بلا وهج مبالغ فيه */
+    --color-bg: hsl(160 14% 7%);
+    --color-surface: hsl(160 13% 10%);
+    --color-surface-2: hsl(160 12% 13%);
+    --color-surface-raised: hsl(160 12% 14%);
+    --color-border: hsl(160 10% 20%);
+    --color-border-soft: hsl(160 10% 16%);
+    --color-text: hsl(140 18% 94%);
+    --color-text-muted: hsl(140 8% 68%);
+    --color-text-faint: hsl(140 6% 48%);
+
+    --color-success: hsl(150 40% 55%);
+    --color-success-soft: hsl(150 30% 16%);
+    --color-warning: hsl(38 60% 58%);
+    --color-warning-soft: hsl(38 40% 16%);
+    --color-danger: hsl(4 65% 62%);
+    --color-danger-soft: hsl(4 40% 16%);
+    --color-live: hsl(150 55% 52%);
+
+    --shadow-color: 160 60% 2%;
+    --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.35);
+    --shadow-md: 0 8px 24px hsl(var(--shadow-color) / 0.45);
+    --shadow-lg: 0 20px 48px hsl(var(--shadow-color) / 0.55);
+
+    color-scheme: dark;
+  }
+}
+
+/* اختيار المستخدم الصريح "داكن" من الإعدادات — يتغلّب في الاتجاهين على نظام الجهاز */
+:root[data-theme="dark"] {
+  --color-primary: hsl(var(--color-primary-h) 42% 52%);
+  --color-primary-strong: hsl(var(--color-primary-h) 48% 62%);
+  --color-primary-soft: hsl(var(--color-primary-h) 30% 18%);
+  --color-primary-on: #06120e;
+
+  --color-gold: hsl(38 55% 62%);
+  --color-gold-soft: hsl(38 35% 16%);
+
+  --color-hadith: hsl(174 30% 62%);
+  --color-hadith-soft: hsl(174 22% 16%);
+
+  --color-bg: hsl(160 14% 7%);
+  --color-surface: hsl(160 13% 10%);
+  --color-surface-2: hsl(160 12% 13%);
+  --color-surface-raised: hsl(160 12% 14%);
+  --color-border: hsl(160 10% 20%);
+  --color-border-soft: hsl(160 10% 16%);
+  --color-text: hsl(140 18% 94%);
+  --color-text-muted: hsl(140 8% 68%);
+  --color-text-faint: hsl(140 6% 48%);
+
+  --color-success: hsl(150 40% 55%);
+  --color-success-soft: hsl(150 30% 16%);
+  --color-warning: hsl(38 60% 58%);
+  --color-warning-soft: hsl(38 40% 16%);
+  --color-danger: hsl(4 65% 62%);
+  --color-danger-soft: hsl(4 40% 16%);
+  --color-live: hsl(150 55% 52%);
+
+  --shadow-color: 160 60% 2%;
+  --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.35);
+  --shadow-md: 0 8px 24px hsl(var(--shadow-color) / 0.45);
+  --shadow-lg: 0 20px 48px hsl(var(--shadow-color) / 0.55);
+
+  color-scheme: dark;
+}
