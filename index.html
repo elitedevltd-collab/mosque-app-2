@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+  <html lang="ar" dir="rtl">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>بوابة المسجد الرقمية | Mosque App</title>
+<meta name="theme-color" content="#1d5240">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icons/icon-192.png">
+  <style>
+  * { box-sizing: border-box; }
+body {
+  margin: 0;
+min-height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+font-family: 'Cairo', Tahoma, Arial, sans-serif;
+background: linear-gradient(160deg, #1d5240, #123527);
+color: #fff;
+padding: 24px;
+}
+.wrap {
+  max-width: 420px;
+width: 100%;
+text-align: center;
+}
+h1 {
+  font-size: 1.6rem;
+margin-bottom: 8px;
+}
+p.sub {
+opacity: 0.85;
+margin-bottom: 32px;
+}
+.card {
+  display: block;
+background: rgba(255,255,255,0.08);
+border: 1px solid rgba(255,255,255,0.18);
+border-radius: 16px;
+padding: 20px;
+margin-bottom: 16px;
+text-decoration: none;
+color: #fff;
+transition: background 0.2s ease;
+}
+.card:hover, .card:active {
+  background: rgba(255,255,255,0.18);
+}
+.card .icon { font-size: 1.8rem; display:block; margin-bottom: 8px; }
+.card .title { font-weight: 700; font-size: 1.05rem; display:block; margin-bottom: 4px; }
+.card .desc { font-size: 0.85rem; opacity: 0.8; display:block; }
+</style>
+  </head>
+  <body>
+  <div class="wrap">
+  <h1>🕌 بوابة المسجد الرقمية</h1>
+  <p class="sub">مرحباً بك في بيت الله • Welcome to the Mosque</p>
+
+  <a class="card" href="./musalli.html">
+  <span class="icon">📖</span>
+  <span class="title">بوابة المصلّي</span>
+  <span class="desc">ترجمة الخطبة، مواقيت الصلاة، القبلة والأذكار</span>
+  </a>
+
+  <a class="card" href="./imam.html">
+  <span class="icon">🎙️</span>
+  <span class="title">لوحة تحكم الإمام</span>
+  <span class="desc">بث نص الخطبة مباشرة للمصلّين</span>
+  </a>
+  </div>
+  </body>
+  </html>
+  
